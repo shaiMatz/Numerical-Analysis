@@ -17,6 +17,6 @@ print(abs(3.0 * (4.0 / 3.0 - 1) - 1))
 
 """ex4"""
 x = abs(3.0 * (4.0 / 3.0 - 1) - 1)
-if x - machineEpsilon() <= 0:
-    x = 0
+if x - machineEpsilon() == 0:
+    x=x-machineEpsilon()
 print(x)
