@@ -1,6 +1,4 @@
 """ex2"""
-
-
 def machineEpsilon(func=float):
     machine_epsilon = func(1)
     machine_epsilon_last = 0.0
@@ -8,7 +6,6 @@ def machineEpsilon(func=float):
         machine_epsilon_last = machine_epsilon
         machine_epsilon = func(machine_epsilon) / func(2)
     return machine_epsilon_last
-
 
 print(machineEpsilon())
 
