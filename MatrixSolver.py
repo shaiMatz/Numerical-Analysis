@@ -1,13 +1,27 @@
 def matrixMul(matrixA, matrixB):
-    if len(matrixA) == len(matrixB) and len(matrixA) == len(matrixA[0]):
-        for i in range(len(matrixA)):
+    """
+    A Function that gets 2 matrices and checks if they are: 1. Square matrix
+                                                            2. In the same size
+    ** If one of the two above is False the program will stop **
+    Then the function will multiply them according to the according to the multiplication algorithm
+
+    :param matrixA: The matrix at the left of the multiplication
+    :param matrixB:The matrix at the right of the multiplication
+    :return: A new matrix, it represents the results
+    """
+    if len(matrixA) == len(matrixB) and len(matrixA) == len(matrixA[0]):  # checks the sizes of the both matrices
+        for i in range(len(matrixA)):  # checks if the left matrix is square
             if len(matrixA) != len(matrixA[i]):
                 exit(0)
-        for i in range(len(matrixB)):
+            else:
+                print("Not NxN")
+        for i in range(len(matrixB)):  # checks if the left matrix is square
             if len(matrixB) != len(matrixB[i]):
                 exit(0)
-        matrixC = [[0 for x in range(len(matrixA))] for y in range(len(matrixB))]
-        for i in range(len(matrixC)):
+            else:
+                print("Not NxN")
+        matrixC =[[0 for x in range(len(matrixA))] for y in range(len(matrixB))]  # Generating a new matrix for the result
+        for i in range(len(matrixC)):  # multiplication according to the multiplication algorithm
             for j in range(len(matrixC)):
                 for k in range(len(matrixC)):
                     matrixC[i][j] += matrixA[i][k] * matrixB[k][j]
@@ -17,12 +31,22 @@ def matrixMul(matrixA, matrixB):
 
 
 def matrix_vectorMul(matrixA, vecA):
-    if len(matrixA) == len(vecA) and len(matrixA) == len(matrixA[0]):
-        for i in range(len(matrixA)):
+    """
+    A function that multiplies a matrix and a vector and checks if they are: 1. Square matrix
+                                                                             2. In the same size
+    ** If one of the two above is False the program will stop **
+    Then the function will multiply them according to the according to the multiplication algorithm
+
+    :param matrixA: The matrix is in the left side of the multiplication
+    :param vecA: The vector is in the right side of the multiplication
+    :return: A new vector, it represents the results
+    """
+    if len(matrixA) == len(vecA) and len(matrixA) == len(matrixA[0]):  # checks the size of the matrix and the vector
+        for i in range(len(matrixA)):  # checks if the left matrix is square
             if len(matrixA) != len(matrixA[i]):
                 raise "Cant Multiply"
-    newVec = [0 for i in range(len(vecA))]
-    for i in range(len(matrixA)):
+    newVec = [0 for i in range(len(vecA))]  # Generating a new vector for the result
+    for i in range(len(matrixA)): # multiplication according to the multiplication algorithm
         for j in range(len(vecA)):
             newVec[i] += matrixA[i][j] * vecA[j]
     return newVec
@@ -139,7 +163,7 @@ def matrixSolve(matrix, vecB):
 
 def printMatrix(matrix):
     for i in matrix:
-        print('\t'.join(map(str, i)))
+        print('{: ^20} {: ^20} {: ^20} {: ^20}\n'.format(*i))
 
 def Norm_Of_A_Matrix(matrix):
     temp = [0 for x in range(len(matrix))]
@@ -149,9 +173,9 @@ def Norm_Of_A_Matrix(matrix):
     return max(temp)
 
 X = [[0, 0, 0,1],
-     [0, -5, 1,0],
+     [0, 5.65165165166516516651651651651, 1,0],
     [0, -3, 0,0],
      [1,0,1,0]
 ]
 #print(matrixSolve(X, [1, 2, 3,4]))
-print(Norm_Of_A_Matrix(X))
+printMatrix(X)
