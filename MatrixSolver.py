@@ -95,7 +95,7 @@ for i in range(3):
 
 def copy_matrix(A):
     """
-    A function that copy and return an identical matrix
+    A function that 
 
     :param A: A matrix to copy
     :return: The new copied matrix
@@ -145,7 +145,21 @@ def matrixSolve(matrix, vecB):
     if determinant_recursive(matrix) != 0:  # Checks if there is a single solution according to the determinant
         solve = I_matrix(matrix)
         for i in range(len(matrix)):  # Applying Gauss Elimination
-            if matrix[i][i] == 0.0 or abs(matrix[i][i]) - machineEpsilon() < 0.0:  # In case the pivot is 0 or a very small number
+            temp=i
+            flag=i
+            while temp<len(matrix):
+                if abs(matrix[temp][i])>abs(matrix[flag][i]):
+                    flag=temp
+                temp += 1
+            if flag!=i:
+                Imat=I_matrix(matrix)
+                temp1=Imat[i]
+                Imat[i]=Imat[flag]
+                Imat[flag]=temp1
+                elementary.append(Imat)
+                matrix = matrixMul(Imat, matrix)
+                matrixes.append(matrix)
+            if matrix[i][i] == 0.0 :  # In case the pivot is 0 or a very small number
                 k = i
                 while k < len(matrix) and matrix[k][i] == 0:  # finding the first raw that does not have a 0 ( in the current column )
                     k += 1
@@ -160,10 +174,11 @@ def matrixSolve(matrix, vecB):
                 solve[i][i] = 1 / matrix[i][i]
                 elementary.append(solve)
                 matrix = matrixMul(solve, matrix)
+                matrix[i][i]=1
                 matrixes.append(matrix)
             m = i + 1
             while m < len(matrix):  # Turning to zero all the rows below ( in the current column )
-                if matrix[m][i] != 0 or abs(matrix[m][i]) - machineEpsilon() < 0:
+                if matrix[m][i] != 0 :
                     solve = I_matrix(matrix)
                     solve[m][i] = -matrix[m][i] / matrix[i][i]
                     elementary.append(solve)
@@ -174,7 +189,7 @@ def matrixSolve(matrix, vecB):
         while n >= 0:  # Obtaining Solution by Back Substitution
             m = n - 1
             while m >= 0:  # Turning to zero all the rows above ( in the current column )
-                if matrix[m][n] != 0 or abs(matrix[m][n]) - machineEpsilon() < 0:
+                if matrix[m][n] != 0 :
                     solve = I_matrix(matrix)
                     solve[m][n] = -matrix[m][n] / matrix[n][n]
                     elementary.append(solve)
@@ -184,14 +199,35 @@ def matrixSolve(matrix, vecB):
             n = n - 1
         for i in elementary:  # Multiplying all the elementary matrices with the vector ( to get the solution vector )
             vecB = matrix_vectorMul(i, vecB)
+        with open("output.txt",'w') as f:
+            f.write("The given matrix:\n\n")
+            writeMatrix(matrixes[0],f)
+            f.write("Gaussian elimination:\n\n")
+            for i in range(len(elementary)):
+                temp2='{}.'.format(i+1)
+                f.write(temp2)
+                f.write("\nElementary matrix:\n\n")
+                writeMatrix(elementary[i],f)
+                f.write("\n----------------------------------------------------------\n")
+                f.write("\nPrevious matrix:\n\n")
+                writeMatrix(matrixes[i],f)
+                f.write("\n----------------------------------------------------------\n")
+                f.write("\nResult of multiply:\n\n")
+                writeMatrix(matrixes[i+1],f)
+                f.write(f'\n------------------ end of stage {i+1} ----------------------\n\n')
+            f.write("\nResult:\n\n")
+            for i in range(len(vecB)):
+                temp3 = f'X{i+1} = {vecB[i]} '
+                f.write(temp3)
 
         return vecB
     else:
         raise "Error"
 
+
 def printMatrix(matrix):
     """
-    A function that prints the matrix
+    A function that prints a matrix
 
     :param matrix: A matrix to print
     :return:  No return value
@@ -200,6 +236,13 @@ def printMatrix(matrix):
         for j in range(len(matrix[i])):
             print('{: ^20}'.format(matrix[i][j]), end="")
         print('\n')
+
+def writeMatrix(matrix,f):
+    for i in range(len(matrix)):
+        for j in range(len(matrix)):
+            temp='{: ^22}'.format(matrix[i][j])
+            f.write(temp)
+        f.write('\n')
 
 
 def printVector(vec):
@@ -226,10 +269,10 @@ def Norm_Of_A_Matrix(matrix):
             temp[i] += abs(matrix[i][j])
     return max(temp)
 
-X = [[1, 5, 7,1],
-     [0, 5.6516, 1,4],
-    [9, -3, 5,7],
-     [4,7,5,1]
-]
-printMatrix(X)
-"""matrixSolve()"""
+X = [[8, 4, 5],
+     [1, 7, 6],
+    [2, 0.24524242452, 5]]
+
+matrixSolve(X,[2,5,45.5632])
+
+
