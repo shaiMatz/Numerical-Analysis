@@ -291,7 +291,39 @@ def Jaacobi(matrix, vec):
         counter += 1
     return vec0
 
+def GausseSeidel(matrix, vec):
+    matrixes = []
+    matrix, temp = pivotMatrix(matrix)
+    matrixes += temp
+    isdom = False
+    if (ifDominant(matrix)):
+        isdom = True
+    else:
+        print("Pay attention, there is no dominant diagonal")
+    G, H = GHGaussSeidel(matrix)
+    vec0 = []
+    for i in range(len(vec)):
+        vec0.append(0)
+    if isdom:
+        x = -1
+    else:
+        x = 10000000
+    counter = 1
+    print("0." + str(vec0))
+    while (x != 0):
+        tempVec = vec0
+        vec0 = addVec(matrix_vectorMul(G, vec0), matrix_vectorMul(H, vec))
+        print(str(counter)+"."+ str(vec0))
+        print()
+        flag = 0
+        for i in range(len(vec0)):
+            if abs(tempVec[i] - vec0[i]) >= 0.00001:
+                flag = 1
+        if flag == 0: break
+        x -= 1
+        counter += 1
+    return vec0
 
-x = [[3, -1, 1], [0, 1, -1], [1, 1, -2]]
-vec = [4, -1, -3]
-printVector(Jaacobi(x, vec))
+matrix = [[4,2,0],[2,10,4],[0,4,5]]
+vec = [2,6,5]
+printVector(GausseSeidel(matrix,vec))
