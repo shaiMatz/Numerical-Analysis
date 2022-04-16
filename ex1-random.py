@@ -7,7 +7,9 @@ result=100
 while result>=12:
     result=int(EladSapir[random.randint(0,8)])+int(EladSapir[random.randint(0,8)])
 print(19+result)"""""
-#result can be between 19-30
+
+
+# result can be between 19-30
 
 # !/bin/python3
 
@@ -246,6 +248,7 @@ class equation_system():
         self.rhs[row] = self.rhs[row] * multiplier
         if self.full_log: self.log += self.__str__() + "\n"
 
+
 eq1315 = equation_system([[-1, 3, 1],
                           [4, 1, -1],
-                          [2, 2, 5]], [-4, 5, 1], circle_pivots = True).to_reduced_triangular()
+                          [2, 2, 5]], [-4, 5, 1], circle_pivots=True).to_reduced_triangular()

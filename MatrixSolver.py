@@ -16,7 +16,8 @@ def matrixMul(matrixA, matrixB):
         for i in range(len(matrixB)):  # checks if the left matrix is square
             if len(matrixB) != len(matrixB[i]):
                 raise "Not NxN"
-        matrixC =[[0 for x in range(len(matrixA))] for y in range(len(matrixB))]  # Generating a new matrix for the result
+        matrixC = [[0 for x in range(len(matrixA))] for y in
+                   range(len(matrixB))]  # Generating a new matrix for the result
         for i in range(len(matrixC)):  # multiplication according to the multiplication algorithm
             for j in range(len(matrixC)):
                 for k in range(len(matrixC)):
@@ -42,7 +43,7 @@ def matrix_vectorMul(matrixA, vecA):
             if len(matrixA) != len(matrixA[i]):
                 raise "Cant Multiply"
     newVec = [0 for i in range(len(vecA))]  # Generating a new vector for the result
-    for i in range(len(matrixA)): # multiplication according to the multiplication algorithm
+    for i in range(len(matrixA)):  # multiplication according to the multiplication algorithm
         for j in range(len(vecA)):
             newVec[i] += matrixA[i][j] * vecA[j]
     return newVec
@@ -145,23 +146,24 @@ def matrixSolve(matrix, vecB):
     if determinant_recursive(matrix) != 0:  # Checks if there is a single solution according to the determinant
         solve = I_matrix(matrix)
         for i in range(len(matrix)):  # Applying Gauss Elimination
-            temp=i
-            flag=i
-            while temp<len(matrix):
-                if abs(matrix[temp][i])>abs(matrix[flag][i]):
-                    flag=temp
+            temp = i
+            flag = i
+            while temp < len(matrix):
+                if abs(matrix[temp][i]) > abs(matrix[flag][i]):
+                    flag = temp
                 temp += 1
-            if flag!=i:
-                Imat=I_matrix(matrix)
-                temp1=Imat[i]
-                Imat[i]=Imat[flag]
-                Imat[flag]=temp1
+            if flag != i:
+                Imat = I_matrix(matrix)
+                temp1 = Imat[i]
+                Imat[i] = Imat[flag]
+                Imat[flag] = temp1
                 elementary.append(Imat)
                 matrix = matrixMul(Imat, matrix)
                 matrixes.append(matrix)
-            if matrix[i][i] == 0.0 :  # In case the pivot is 0 or a very small number
+            if matrix[i][i] == 0.0:  # In case the pivot is 0 or a very small number
                 k = i
-                while k < len(matrix) and matrix[k][i] == 0:  # finding the first raw that does not have a 0 ( in the current column )
+                while k < len(matrix) and matrix[k][
+                    i] == 0:  # finding the first raw that does not have a 0 ( in the current column )
                     k += 1
                 temp = solve[i]
                 solve[i] = solve[k]
@@ -174,11 +176,11 @@ def matrixSolve(matrix, vecB):
                 solve[i][i] = 1 / matrix[i][i]
                 elementary.append(solve)
                 matrix = matrixMul(solve, matrix)
-                matrix[i][i]=1
+                matrix[i][i] = 1
                 matrixes.append(matrix)
             m = i + 1
             while m < len(matrix):  # Turning to zero all the rows below ( in the current column )
-                if matrix[m][i] != 0 :
+                if matrix[m][i] != 0:
                     solve = I_matrix(matrix)
                     solve[m][i] = -matrix[m][i] / matrix[i][i]
                     elementary.append(solve)
@@ -189,7 +191,7 @@ def matrixSolve(matrix, vecB):
         while n >= 0:  # Obtaining Solution by Back Substitution
             m = n - 1
             while m >= 0:  # Turning to zero all the rows above ( in the current column )
-                if matrix[m][n] != 0 :
+                if matrix[m][n] != 0:
                     solve = I_matrix(matrix)
                     solve[m][n] = -matrix[m][n] / matrix[n][n]
                     elementary.append(solve)
@@ -199,25 +201,25 @@ def matrixSolve(matrix, vecB):
             n = n - 1
         for i in elementary:  # Multiplying all the elementary matrices with the vector ( to get the solution vector )
             vecB = matrix_vectorMul(i, vecB)
-        with open("output.txt",'w') as f:
+        with open("output.txt", 'w') as f:
             f.write("The given matrix:\n\n")
-            writeMatrix(matrixes[0],f)
+            writeMatrix(matrixes[0], f)
             f.write("Gaussian elimination:\n\n")
             for i in range(len(elementary)):
-                temp2='{}.'.format(i+1)
+                temp2 = '{}.'.format(i + 1)
                 f.write(temp2)
                 f.write("\nElementary matrix:\n\n")
-                writeMatrix(elementary[i],f)
+                writeMatrix(elementary[i], f)
                 f.write("\n----------------------------------------------------------\n")
                 f.write("\nPrevious matrix:\n\n")
-                writeMatrix(matrixes[i],f)
+                writeMatrix(matrixes[i], f)
                 f.write("\n----------------------------------------------------------\n")
                 f.write("\nResult of multiply:\n\n")
-                writeMatrix(matrixes[i+1],f)
-                f.write(f'\n------------------ end of stage {i+1} ----------------------\n\n')
+                writeMatrix(matrixes[i + 1], f)
+                f.write(f'\n------------------ end of stage {i + 1} ----------------------\n\n')
             f.write("\nResult:\n\n")
             for i in range(len(vecB)):
-                temp3 = f'X{i+1} = {vecB[i]} '
+                temp3 = f'X{i + 1} = {vecB[i]} '
                 f.write(temp3)
 
         return vecB
@@ -237,10 +239,17 @@ def printMatrix(matrix):
             print('{: ^20}'.format(matrix[i][j]), end="")
         print('\n')
 
-def writeMatrix(matrix,f):
+
+def writeMatrix(matrix, f):
+    """
+    prints the matrix into a file
+
+    :param matrix: matrix needs to print
+    :param f: file name
+    """
     for i in range(len(matrix)):
         for j in range(len(matrix)):
-            temp='{: ^22}'.format(matrix[i][j])
+            temp = '{: ^22}'.format(matrix[i][j])
             f.write(temp)
         f.write('\n')
 
@@ -269,10 +278,9 @@ def Norm_Of_A_Matrix(matrix):
             temp[i] += abs(matrix[i][j])
     return max(temp)
 
-X = [[-1,3,1],
+
+X = [[-1, 3, 1],
      [4, 1, -1],
-     [2,2,5]]
+     [2, 2, 5]]
 
-matrixSolve(X,[-4,5,1])
-
-
+matrixSolve(X, [-4, 5, 1])

@@ -9,7 +9,7 @@ def printVector(vec):
     :return: No return value
     """
     for i in range(len(vec)):
-        vec[i]=round(vec[i],4)
+        vec[i] = round(vec[i], 4)
         print(vec[i])
 
 
@@ -126,6 +126,11 @@ def matrixMul(matrixA, matrixB):
 
 
 def pivotMatrix(matrix):
+    """
+    arrange the matrix so the pivot will be in the diagonal
+    :param matrix:the matrix to arrange
+    :return:the arrange matrix
+    """
     matrixes = []  # A List for all of the mid matrices along the solution
     for i in range(len(matrix)):
         flag = i
@@ -143,6 +148,11 @@ def pivotMatrix(matrix):
 
 
 def ifDominant(matrix):
+    """
+    check if dominant matrix
+    :param matrix: the matrix to check
+    :return: true if dominant false if not
+    """
     for i in range(0, len(matrix)):
         sum = 0
         for j in range(0, len(matrix)):
@@ -154,6 +164,12 @@ def ifDominant(matrix):
 
 
 def LDU(matrix):
+    """
+    calc the L D and U parameters of the matrix
+
+    :param matrix: matrix to calc its parameters
+    :return: L D and U
+    """
     L, D, U = I_matrix(matrix), I_matrix(matrix), I_matrix(matrix)
     for i in range(len(matrix)):
         for j in range(len(matrix)):
@@ -169,6 +185,13 @@ def LDU(matrix):
 
 
 def addMatrices(A, B):
+    """
+    calc the sum of 2 matrices
+
+    :param A: 1 matrix
+    :param B: 2 matrix
+    :return: the sum of the 2 matrices
+    """
     if len(A) == len(B) and len(A) == len(A[0]) and len(B) == len(B[0]):
         C = I_matrix(A)
         for i in range(len(A)):
@@ -179,6 +202,12 @@ def addMatrices(A, B):
 
 
 def GHjaacobi(matrix):
+    """
+    calc G and H parameters by jaacobi
+
+    :param matrix: the given matrix
+    :return: the calc of G and H
+    """
     L, D, U = LDU(matrix)
     H = getMatrixInverse(D)
     G = copy_matrix(H)
@@ -190,6 +219,12 @@ def GHjaacobi(matrix):
 
 
 def GHGaussSeidel(matrix):
+    """
+        calc G and H parameters by GaussSeidel
+
+        :param matrix: the given matrix
+        :return: the calc of G and H
+        """
     L, D, U = LDU(matrix)
     H = getMatrixInverse(addMatrices(L, D))
     G = copy_matrix(H)
@@ -201,6 +236,13 @@ def GHGaussSeidel(matrix):
 
 
 def addVec(A, B):
+    """
+       calc the sum of 2 vectors
+
+       :param A: 1 vector
+       :param B: 2 vector
+       :return: the sum of the 2 vectors
+       """
     c = []
     if len(A) == len(B):
         for i in range(len(A)):
@@ -226,14 +268,32 @@ def machineEpsilon(func=float):  # This is a function from assignment 1
 
 
 def transposeMatrix(m):
+    """
+    calc the transpose matrix
+
+    :param m:the given matrix
+    :return: her transpose
+    """
     return list(map(list, zip(*m)))
 
 
 def getMatrixMinor(m, i, j):
+    """
+       calc the minor of the matrix
+
+       :param m:the given matrix
+       :return: her minor
+       """
     return [row[:j] + row[j + 1:] for row in (m[:i] + m[i + 1:])]
 
 
 def getMatrixInverse(m):
+    """
+    calc the inverse matrix of the matrix
+
+    :param m:the given matrix
+    :return:the inverse matrix
+    """
     determinant = determinant_recursive(m)
     # special case for 2x2 matrix:
     if len(m) == 2:
@@ -259,6 +319,13 @@ def getMatrixInverse(m):
 
 
 def Jaacobi(matrix, vec):
+    """
+    calc by jaacobi method
+
+    :param matrix: given matrix
+    :param vec: vector
+    :return: the calc of the linear equation
+    """
     matrixes = []
     matrix, temp = pivotMatrix(matrix)
     matrixes += temp
@@ -280,7 +347,7 @@ def Jaacobi(matrix, vec):
     while (x != 0):
         tempVec = vec0
         vec0 = addVec(matrix_vectorMul(G, vec0), matrix_vectorMul(H, vec))
-        print(str(counter)+"."+ str(vec0))
+        print(str(counter) + "." + str(vec0))
         print()
         flag = 0
         for i in range(len(vec0)):
@@ -291,7 +358,15 @@ def Jaacobi(matrix, vec):
         counter += 1
     return vec0
 
+
 def GausseSeidel(matrix, vec):
+    """
+    calc by Gausse Seidel method
+
+    :param matrix: given matrix
+    :param vec: vector
+    :return: the calc of the linear equation
+    """
     matrixes = []
     matrix, temp = pivotMatrix(matrix)
     matrixes += temp
@@ -313,7 +388,7 @@ def GausseSeidel(matrix, vec):
     while (x != 0):
         tempVec = vec0
         vec0 = addVec(matrix_vectorMul(G, vec0), matrix_vectorMul(H, vec))
-        print(str(counter)+"."+ str(vec0))
+        print(str(counter) + "." + str(vec0))
         print()
         flag = 0
         for i in range(len(vec0)):
@@ -324,6 +399,7 @@ def GausseSeidel(matrix, vec):
         counter += 1
     return vec0
 
-matrix = [[4,2,0],[2,10,4],[0,4,5]]
-vec = [2,6,5]
-printVector(GausseSeidel(matrix,vec))
+
+matrix = [[4, 2, 0], [2, 10, 4], [0, 4, 5]]
+vec = [2, 6, 5]
+printVector(GausseSeidel(matrix, vec))
