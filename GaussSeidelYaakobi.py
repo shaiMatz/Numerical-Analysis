@@ -356,7 +356,7 @@ def Jaacobi(matrix, vec):
         if flag == 0: break
         x -= 1
         counter += 1
-    return vec0
+    return vec0,counter
 
 
 def GausseSeidel(matrix, vec):
@@ -382,7 +382,7 @@ def GausseSeidel(matrix, vec):
     if isdom:
         x = -1
     else:
-        x = 10000000
+        x = 100
     counter = 1
     print("0." + str(vec0))
     while (x != 0):
@@ -397,9 +397,24 @@ def GausseSeidel(matrix, vec):
         if flag == 0: break
         x -= 1
         counter += 1
-    return vec0
+    return vec0,counter
 
 
-matrix = [[4, 2, 0], [2, 10, 4], [0, 4, 5]]
-vec = [2, 6, 5]
-printVector(GausseSeidel(matrix, vec))
+matrixA = [[4, 2, 0], [2, 10, 4], [0, 4, 5]]
+vectorB = [2, 6, 5]
+
+while(True):
+    choice = input("Press 1 for Jaacobi or 2 for Gausse-Seidel (anything else to exit): ")
+    if choice == "1":
+        x, y = Jaacobi(matrixA, vectorB)
+        print("Number of iterations: " + str(y))
+        printVector(x)
+        print()
+    elif choice == "2":
+        x,y = GausseSeidel(matrixA, vectorB)
+        print("Number of iterations: " + str(y))
+        printVector(x)
+        print()
+    else:
+        break
+
