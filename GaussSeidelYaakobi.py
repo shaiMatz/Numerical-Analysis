@@ -400,8 +400,10 @@ def GausseSeidel(matrix, vec):
     return vec0,counter
 
 
-matrixA = [[4, 2, 0], [2, 10, 4], [0, 4, 5]]
-vectorB = [2, 6, 5]
+matrixA = [[25, 5, 1],
+     [4, 2, 1],
+     [1, 1, 1]]
+vectorB = [2, 0, 1]
 
 while(True):
     choice = input("Press 1 for Jaacobi or 2 for Gausse-Seidel (anything else to exit): ")

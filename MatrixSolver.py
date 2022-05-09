@@ -279,8 +279,8 @@ def Norm_Of_A_Matrix(matrix):
     return max(temp)
 
 
-X = [[-1, 3, 1],
-     [4, 1, -1],
-     [2, 2, 5]]
+X = [[25, 5, 1],
+     [4, 2, 1],
+     [1, 1, 1]]
 
-matrixSolve(X, [-4, 5, 1])
+printVector(matrixSolve(X, [2, 0, 1]))
