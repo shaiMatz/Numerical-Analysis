@@ -17,14 +17,21 @@ def bisect(func, start_point, end_point, tol):
     e = end_point
     for i in range(0, N):
         mid = (end_point + start_point) / 2.0
-        if func(mid) == 0 or (end_point - start_point) / 2.0 < tol:
+        if func(start_point) == 0:
+            return "bisect method soln: x = " + str(
+                start_point
+            ) + "\nFound root after {0} iterations between the starting point {1} to ending point {2}".format(
+                i + 1, s, e), 1, start_point
+        elif func(end_point) == 0:
+            return "bisect method soln: x = " + str(
+                end_point
+            ) + "\nFound root after {0} iterations between the starting point {1} to ending point {2}".format(
+                i + 1, s, e), 1, end_point
+        elif func(mid) == 0 or (end_point - start_point) / 2.0 < tol:
             return "bisect method soln: x = " + str(
                 mid) + "\nFound root after {0} iterations between the starting point {1} to ending point {2}".format(
                 i + 1, s, e), 1, mid
-        elif func(start_point) == 0:
-            return "bisect method soln: x = " + str(
-                start_point) + "\nFound root after {0} iterations between the starting point {1} to ending point {2}".format(
-                i + 1, s, e), 1, start_point
+
         # same sigh
         if func(mid) * func(start_point) < 0:
             end_point = mid
@@ -50,9 +57,13 @@ def newtonRaphson(f, start_point, end_point, TOL):
         x_r1 = x_r - (f(x_r) / my_f1(x_r))
         if start_point < x_r1 < end_point:
             if func(start_point) == 0:
-                return "bisect method soln: x = " + str(
+                return "Newton Raphson method soln: x = " + str(
                     start_point) + "\nFound root after {0} iterations between the starting point {1} to ending point {2}".format(
                     i, s, e), 1, start_point
+            if func(end_point) == 0:
+                return "Newton Raphson method soln: x = " + str(
+                    end_point) + "\nFound root after {0} iterations between the starting point {1} to ending point {2}".format(
+                    i, s, e), 1, end_point
             if my_f1(x_r) == 0:
                 if f(x_r) == 0:
                     return "Newton Raphson method soln: x = " + str(
@@ -99,27 +110,32 @@ def main():
         print()
         if menu == "1":
             flag = -1
+            res = {}
             flag2 = -1
             start_point, end_point, TOL = choice()
             if start_point > end_point:
                 start_point, end_point = end_point, start_point
             e_p, s_p = round(start_point + 0.1, 4), start_point
             while s_p < end_point:
-                if func(s_p) * func(e_p) < 0:
+                if func(s_p) * func(e_p) <= 0:
                     message, result, mid = bisect(func, s_p, e_p, TOL)
                     if result == 1:
+                        if mid not in res.keys():
+                            res[mid] = message
+                            print()
+                            print(message)
+                            print()
                         flag = 1
-                        print()
-                        print(message)
-                        print()
-                if funcd(s_p) * funcd(e_p) <= 0:
+                if funcd(s_p) * funcd(e_p) < 0:
                     message, result, mid = bisect(funcd, s_p, e_p, TOL)
                     if result == 1:
                         if func(mid) == 0:
+                            if mid not in res.keys():
+                                res[mid] = message
+                                print()
+                                print("The result came from the derivative:\n" + message)
+                                print()
                             flag2 = 1
-                            print()
-                            print("The result came from the derivative:\n" + message)
-                            print()
                 e_p = round(e_p + 0.1, 4)
                 if e_p > end_point:
                     e_p = end_point
@@ -130,6 +146,7 @@ def main():
                     s_p, e_p))
                 print()
         elif menu == "2":
+            res = {}
             flag = -1
             flag2 = -1
             start_point, end_point, TOL = choice()
@@ -137,21 +154,25 @@ def main():
                 start_point, end_point = end_point, start_point
             e_p, s_p = round(start_point + 0.1, 4), start_point
             while s_p < end_point:
-                if func(s_p) * func(e_p) < 0:
+                if func(s_p) * func(e_p) <= 0:
                     message, result, mid = newtonRaphson(f, s_p, e_p, TOL)
                     if result == 1:
+                        if mid not in res.keys():
+                            res[mid] = message
+                            print()
+                            print(message)
+                            print()
                         flag = 1
-                        print()
-                        print(message)
-                        print()
                 if funcd(s_p) * funcd(e_p) <= 0:
                     message, result, mid = newtonRaphson(f, s_p, e_p, TOL)
                     if result == 1:
                         if func(mid) == 0:
+                            if mid not in res.keys():
+                                res[mid] = message
+                                print()
+                                print("The result came from the derivative:\n" + message)
+                                print()
                             flag2 = 1
-                            print()
-                            print("The result came from the derivative:\n" + message)
-                            print()
                 e_p = round(e_p + 0.1, 4)
                 if e_p > end_point:
                     e_p = end_point
@@ -194,19 +215,14 @@ def main():
 
 
 x = sp.symbols('x')
+
 # f = x ** 4 + x ** 3 - 3 * x ** 2
-# f = x ** 3 - x - 1
-f = x**2 -x
+# f = x ** 3 - 3*x**2
+f = x ** 2 - x
+# f = x ** 2 - 5*x+2
+#f = x ** 5 + 3 * x ** 4 + x
+
 func = lambdify(x, f)
 funcd = f.diff(x)
 funcd = lambdify(x, funcd)
 main()
-
-# f = "x**3-x-1"
-
-
-# print(bisect(f, start_point, end_point, TOL))
-#
-# print(newtonRaphson(f, start_point, end_point, 0.001, 100))
-
-# print(secant(f, start_point, end_point, 0.001, 100))
