@@ -1,6 +1,6 @@
 import math
 from math import ceil
-
+from fastnumbers import fast_real
 import sympy as sp
 from sympy.utilities.lambdify import lambdify
 
@@ -9,44 +9,58 @@ from sympy.utilities.lambdify import lambdify
 #        MAX iterations (N)
 # CONDITIONS: a < b, f(a)*f(b) < 0
 # OUTPUT: value which differs from a root of f(x)=0 by less than 'tol'
-def bisect(func, low, high, tol):
+def bisect(func, start_point, end_point, tol):
     # switch low and high if low is larger than high
     N = ((math.log(tol / (end_point - start_point), math.e)) / -math.log(2, math.e))
     N = ceil(N)
-
-    f = lambdify(x, func)  # if already did lambdify throw exception
-    func = f
-
-    if low > high:
-        low, high = high, low
-
+    s = start_point
+    e = end_point
     for i in range(0, N):
-        mid = (high + low) / 2.0
-        if func(mid) == 0 or (high - low) / 2.0 < tol:
-            return "bisect method soln: x = " + str(mid) + "\nFound root after {} iterations".format(i + 1), 1
+        mid = (end_point + start_point) / 2.0
+        if func(mid) == 0 or (end_point - start_point) / 2.0 < tol:
+            return "bisect method soln: x = " + str(
+                mid) + "\nFound root after {0} iterations between the starting point {1} to ending point {2}".format(
+                i + 1, s, e), 1, mid
+        elif func(start_point) == 0:
+            return "bisect method soln: x = " + str(
+                start_point) + "\nFound root after {0} iterations between the starting point {1} to ending point {2}".format(
+                i + 1, s, e), 1, start_point
         # same sigh
-        if func(mid) * func(low) < 0:
-            high = mid
+        if func(mid) * func(start_point) < 0:
+            end_point = mid
         # diff sign
         else:
-            low = mid
+            start_point = mid
 
-    return "Method failed after {} iterations".format(N), -1
-
-
-
-##############method######################
+    return "Method failed after {} iterations".format(N), -1, -1
 
 
-# f = "x**3-x-1"
-x = sp.symbols('x')
-f = 4 * x ** 3 - 48 * x + 5
-TOL = 0.001
-start_point = 3
-end_point = 4
-N = 50
+##############newton raphson######################
 
+def newtonRaphson(f, start_point, end_point, TOL, N):
+    x_r = (start_point + end_point) / 2.0
+    s = start_point
+    e = end_point
+    my_f1 = f.diff(x)
+    f = lambdify(x, f)
+    my_f1 = lambdify(x, my_f1)
 
-print(bisect(f, start_point, end_point, TOL))
+    for i in range(1, N):
+        x_r1 = x_r - (f(x_r) / my_f1(x_r))
+        if start_point < x_r1 < end_point:
+            if func(start_point) == 0:
+                return "bisect method soln: x = " + str(
+                    start_point) + "\nFound root after {0} iterations between the starting point {1} to ending point {2}".format(
+                    i, s, e), 1, start_point
+            if my_f1(x_r) == 0:
+                if f(x_r) == 0:
+                    return "Newton Raphson method soln: x = " + str(
+                        x_r) + "\nFound root after {0} iterations between the starting point {1} to ending point {2}".format(
+                        i, s, e), 1, x_r
+            if (x_r1 - x_r) / 2.0 < TOL:
+                return "Newton Raphson method soln: x = " + str(
+                    x_r1) + "\nFound root after {0} iterations between the starting point {1} to ending point {2}".format(
+                    i, s, e), 1, x_r1
 
-
+        x_r = x_r1
+    return "Method failed after {} iterations".format(N), -1, -1
