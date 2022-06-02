@@ -135,50 +135,65 @@
 #
 # driver()
 import math
+import MatrixSolver
 
 
-def CubicSpline(x,y,wx):
-    h = []
-    g = []
-    m = []
-    d = []
-    for i in range(len(x)):
-        if i == len(x) - 1:
-            d.append(0)
-        if i == 0:
-            h.append(x[1]-x[0])
-            g.append(0)
-            d.append(0)
-        else:
-            if i != len(x) - 1:
-                h.append(x[i + 1] - x[i])
-                d.append((6/(h[i-1] + h[i]))*(((y[i+1] - y[i])/h[i])-((y[i] - y[i-1])/h[i-1])))
-                g.append(h[i] / (h[i - 1] + h[i]))
-                m.append(1-g[i])
-
-    return m,g
-
-
-def makeMatrix(m,g):
-    g.pop(0)
-    print(g)
-
+def makeMatrix(m, g):
+    #g.pop(0)
+    #print(g)
     matrix = [[0 for i in range(len(m))] for j in range(len(m))]
     for i in range(len(m)):
         for j in range(len(m)):
             if i == j:
                 matrix[i][j] = 2
-            elif j == i+1:
+            elif j == i + 1:
                 matrix[i][j] = g[i]
-            elif i == j+1:
+            elif i == j + 1:
                 matrix[i][j] = m[i]
     return matrix
 
 
+def CubicSpline(x, y, wx):
+    if wx in x:
+        return y[x.index(wx)]
+    h = [x[1] - x[0]]
+    g = [0]
+    m = [0]
+    d = [0]
+    for i in range(1,len(x)):
+        #if i == len(x) - 1:
+        #   d.append(0)
+        if i != len(x) - 1:
+            h.append(x[i + 1] - x[i])
+            g.append(h[i] / (h[i - 1] + h[i]))
+            d.append((6 / (h[i - 1] + h[i])) * (((y[i + 1] - y[i]) / h[i]) - ((y[i] - y[i - 1]) / h[i - 1])))
+            m.append(1 - g[i])
+    m.append(0)
+    g.append(0)
+    d.append(0)
+    findX = 0
+    for i in range(len(x)):
+        if wx < x[i]:
+            findX = i-1
+            break
+        if i==len(x)-1:
+            findX=len(x)-2
+    print(g)
+    print(h)
+    print(d)
+    print(m)
+    matrix = makeMatrix(m, g)
+    vec=[]
+    vec.append(d[findX])
+    vec.append(d[findX+1])
+    M = MatrixSolver.matrixSolve(matrix,d)
+
+    return ((((x[findX + 1] - wx) ** 3) * M[findX] + ((wx - x[findX]) ** 3) * M[findX+1]) / (6 * h[findX])
+    +((x[findX + 1] - wx) * y[findX] + (wx - x[findX]) * y[findX + 1]) / h[findX]
+    - (((x[findX + 1] - wx) * M[findX]) + ((wx - x[findX])) * M[findX+1]) * h[findX] / 6)
 
 
-
-
-m,g = CubicSpline([0,math.pi/6,math.pi/4,math.pi/2],[0,0.5,0.7072,1],math.pi/3)
-print(makeMatrix(m,g))
-
+#print(CubicSpline([0, math.pi / 6, math.pi / 4, math.pi / 2], [0, 0.5, 0.7072, 1], math.pi/3 ))
+#print(CubicSpline([0, math.pi / 6, math.pi / 4, math.pi / 2], [0, 0.5, 0.7072, 1],math.pi / 3))
+print(CubicSpline([-0.5,0,1,2.3,2.6], [7.25,1,2,30.21, 41.04],1.5))
+#print(makeMatrix(m, g))

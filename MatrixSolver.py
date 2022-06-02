@@ -283,4 +283,4 @@ X = [[25, 5, 1],
      [4, 2, 1],
      [1, 1, 1]]
 
-printVector(matrixSolve(X, [2, 0, 1]))
+#printVector(matrixSolve(X, [2, 0, 1]))
