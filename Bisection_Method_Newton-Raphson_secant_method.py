@@ -258,10 +258,10 @@ x = sp.symbols('x')
 # f = x ** 4 + x ** 3 - 3 * x ** 2
 # f = x ** 3 - 3*x**2
 #f = x ** 3 + 2 * x ** 2 + 1 * x + 5
-# f = x ** 2 - 5*x+2
+#f = x ** 2 - 5*x+2
 # f = x ** 5 + 3 * x ** 4 + x
 #f = sp.cos(x)
-f = sp.Abs(5)
+#f = sp.Abs(5)
 
 func = lambdify(x, f)
 funcd = f.diff(x)
