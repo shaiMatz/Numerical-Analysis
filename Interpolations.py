@@ -160,6 +160,9 @@ def CubicSpline(x,y,wx):
 
 
 def makeMatrix(m,g):
+    g.pop(0)
+    print(g)
+
     matrix = [[0 for i in range(len(m))] for j in range(len(m))]
     for i in range(len(m)):
         for j in range(len(m)):
