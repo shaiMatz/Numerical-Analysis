@@ -1,8 +1,5 @@
 
 
-Companion book [download](https://datawok.net/files/2019/numeric.pdf)
-
-
 Algorithms
 ----------
 
