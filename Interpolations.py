@@ -193,13 +193,13 @@ def CubicSpline(x, y, wx):
     - (((x[findX + 1] - wx) * M[findX]) + ((wx - x[findX])) * M[findX+1]) * h[findX] / 6)
 
 
-def FullCubicSpline(x, y, wx):
+def FullCubicSpline(x, y, wx,Y_0 ,Y_n):
     if wx in x:
         return y[x.index(wx)]
     h = [x[1] - x[0]]
     g = [1]
     m = [0]
-    d = [0]
+    d = [(6/h[0])*(((y[1]-y[0])/h[0])-Y_0)]
     for i in range(1,len(x)):
         #if i == len(x) - 1:
         #   d.append(0)
@@ -210,7 +210,7 @@ def FullCubicSpline(x, y, wx):
             m.append(1 - g[i])
     m.append(1)
     g.append(0)
-    d.append(0)
+    d.append((6/h[len(x)-2])*(Y_n-(y[len(x)-1]-y[len(x)-2])/h[0]))
     findX = 0
     for i in range(len(x)):
         if wx < x[i]:
@@ -218,21 +218,22 @@ def FullCubicSpline(x, y, wx):
             break
         if i==len(x)-1:
             findX=len(x)-2
-    print(g)
-    print(h)
+    # print(g)
+    # print(h)
     print(d)
-    print(m)
+    # print(m)
     matrix = makeMatrix(m, g)
+    print(matrix)
     vec=[]
     vec.append(d[findX])
     vec.append(d[findX+1])
     M = MatrixSolver.matrixSolve(matrix,d)
-
+    print(M)
     return ((((x[findX + 1] - wx) ** 3) * M[findX] + ((wx - x[findX]) ** 3) * M[findX+1]) / (6 * h[findX])
     +((x[findX + 1] - wx) * y[findX] + (wx - x[findX]) * y[findX + 1]) / h[findX]
     - (((x[findX + 1] - wx) * M[findX]) + ((wx - x[findX])) * M[findX+1]) * h[findX] / 6)
 
 #print(CubicSpline([0, math.pi / 6, math.pi / 4, math.pi / 2], [0, 0.5, 0.7072, 1], math.pi/3 ))
-#print(CubicSpline([0, math.pi / 6, math.pi / 4, math.pi / 2], [0, 0.5, 0.7072, 1],math.pi / 3))
-print(CubicSpline([-0.5,0,1,2.3,2.6], [7.25,1,2,30.21, 41.04],1.5))
+print(FullCubicSpline([0, math.pi / 6, math.pi / 4, math.pi / 2], [0, 0.5, 0.7072, 1],math.pi / 3,1,0))
+#print(CubicSpline([-0.5,0,1,2.3,2.6], [7.25,1,2,30.21, 41.04],1.5))
 #print(makeMatrix(m, g))
