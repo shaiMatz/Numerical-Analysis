@@ -1,4 +1,15 @@
+import math
+import MatrixSolver
+
+
 def createMatrix(matrix, size, val):
+    """
+
+    :param matrix: table
+    :param size: table's lentgh
+    :param val: whitch natrix to make
+    :return: the matrix
+    """
     if val == 0:
         matrix = [[0 for i in range(size)] for j in range(size)]
     elif val == 1:
@@ -7,6 +18,12 @@ def createMatrix(matrix, size, val):
 
 
 def calcDet(matrix):
+    """
+    Calculates Determinant
+
+    :param matrix: matrix
+    :return: the value
+    """
     size = len(matrix)
     det = 0
     if size == 2:
@@ -25,6 +42,11 @@ def calcDet(matrix):
 
 
 def invertMatrix(matrix):
+    """
+
+    :param matrix: matrix
+    :return: inverted matrix
+    """
     determinant = calcDet(matrix)
     if len(matrix) == 2:
         return [[matrix[1][1] / determinant, -1 * matrix[0][1] / determinant],
@@ -45,6 +67,12 @@ def invertMatrix(matrix):
 
 
 def Mul_matrix(a, b):
+    """
+
+    :param a: matrix a
+    :param b: matrix b
+    :return: result
+    """
     temp = [0 for i in range(len(a))]
     for i in range(len(a)):
         for j in range(len(a)):
@@ -53,6 +81,13 @@ def Mul_matrix(a, b):
 
 
 def Linear_Method(tab, xf):
+    """
+    Linear Method for interpolation
+
+    :param tab: table of numbers(x,y)
+    :param xf: wanted value
+    :return: result
+    """
     for i in range(len(tab)):
         if tab[i][0] < xf < tab[i + 1][0]:
             return (tab[i][1] - tab[i + 1][1]) / (tab[i][0] - tab[i + 1][0]) * xf + (
@@ -60,6 +95,13 @@ def Linear_Method(tab, xf):
 
 
 def Polynomial_Method(tab, xf):
+    """
+    Polynomial Method for interpolation
+
+    :param tab: table of numbers(x,y)
+    :param xf: wanted value
+    :return: result
+    """
     result, b = 0, [tab[i][1] for i in range(len(tab))]
     poly = Mul_matrix(invertMatrix(Polynomial_creation(tab)), b)
     for i in range(len(poly)):
@@ -68,6 +110,13 @@ def Polynomial_Method(tab, xf):
 
 
 def Lagrange_Method(tab, xf):
+    """
+    Lagrange's Method for interpolation
+
+    :param tab: table of numbers(x,y)
+    :param xf: wanted value
+    :return: result
+    """
     Sum, temp = 0, 1
     for i in range(len(tab)):
         for j in range(len(tab)):
@@ -79,12 +128,24 @@ def Lagrange_Method(tab, xf):
 
 
 def Polynomial_creation(tab):
+    """
+
+    :param tab: table of numbers(x,y)
+    :return: result
+    """
     for i in range(len(tab)):
         tab[i].insert(0, 1)
     return [[tab[i][1] ** j for j in range(len(tab))] for i in range(len(tab))]
 
 
 def Nevil_Method(tab, xf):
+    """
+    Nevil's Method for interpolation
+
+    :param tab: table of numbers(x,y)
+    :param xf: wanted value
+    :return: result
+    """
     def Nevil_P(m, n):
         if m == n:
             return tab[m][1]
@@ -94,52 +155,15 @@ def Nevil_Method(tab, xf):
             return Px
 
     return Nevil_P(0, len(tab) - 1)
-#
-#
-# def driver():
-#     print("How many points do you want to enter ?")
-#     count = int(input())
-#     tab = [[0 for i in range(2)] for j in range(count)]
-#     tab1 = [[0 for i in range(2)] for j in range(count)]
-#     tab2 = [[0 for i in range(2)] for j in range(count)]
-#     tab3 = [[0 for i in range(2)] for j in range(count)]
-#     print(tab)
-#     for n in range(count):
-#         print("x{0}= ".format(n))
-#         tab[n][0] = float(input())
-#         tab1[n][0] = tab[n][0]
-#         tab2[n][0] = tab[n][0]
-#         tab3[n][0] = tab[n][0]
-#         print("y{0}= ".format(n))
-#         tab[n][1] = float(input())
-#         tab1[n][1] = tab[n][1]
-#         tab2[n][1] = tab[n][1]
-#         tab3[n][1] = tab[n][1]
-#     print(tab)
-#     print("Which point you want to know ?")
-#     xf = float(input())
-#     # choice = 5
-#     # while choice > 4 or choice < 1:
-#     #print("Which method you want to use ?\n1.Linear\n2.Polynomial\n3.Lagrange\n4.Nevil")
-#     # choice = int(input())
-#     # if choice == 1:
-#     print("Result = {}".format(Linear_Method(tab, xf)))
-#     # if choice == 2:
-#     print("Result = {}".format(Polynomial_Method(tab1, xf)))
-#     # if choice == 3:
-#     print("Result = {}".format(Lagrange_Method(tab2, xf)))
-#     # if choice == 4:
-#     print("Result = {}".format(Nevil_Method(tab3, xf)))
-#
-#
-# driver()
-import math
-import MatrixSolver
 
 
 def makeMatrix(m, g):
-    #g.pop(0)
-    #print(g)
+    """
+    Makes a matrix as needed in spline method
+    :param m: Array m
+    :param g: Array n
+    :return: matrix
+    """
     matrix = [[0 for i in range(len(m))] for j in range(len(m))]
     for i in range(len(m)):
         for j in range(len(m)):
@@ -153,14 +177,21 @@ def makeMatrix(m, g):
 
 
 def CubicSpline(x, y, wx):
+    """
+
+    :param x: Array of x values
+    :param y: Array of y values
+    :param wx: wanted value
+    :return: result
+    """
     if wx in x:
         return y[x.index(wx)]
     h = [x[1] - x[0]]
     g = [0]
     m = [0]
     d = [0]
-    for i in range(1,len(x)):
-        #if i == len(x) - 1:
+    for i in range(1, len(x)):
+        # if i == len(x) - 1:
         #   d.append(0)
         if i != len(x) - 1:
             h.append(x[i + 1] - x[i])
@@ -173,29 +204,36 @@ def CubicSpline(x, y, wx):
     findX = 0
     for i in range(len(x)):
         if wx < x[i]:
-            findX = i-1
+            findX = i - 1
             break
-        if i==len(x)-1:
-            findX=len(x)-2
+        if i == len(x) - 1:
+            findX = len(x) - 2
     matrix = makeMatrix(m, g)
-    vec=[]
+    vec = []
     vec.append(d[findX])
-    vec.append(d[findX+1])
-    M = MatrixSolver.matrixSolve(matrix,d)
-    return ((((x[findX + 1] - wx) ** 3) * M[findX] + ((wx - x[findX]) ** 3) * M[findX+1]) / (6 * h[findX])
-    +((x[findX + 1] - wx) * y[findX] + (wx - x[findX]) * y[findX + 1]) / h[findX]
-    - (((x[findX + 1] - wx) * M[findX]) + ((wx - x[findX])) * M[findX+1]) * h[findX] / 6)
+    vec.append(d[findX + 1])
+    M = MatrixSolver.matrixSolve(matrix, d)
+    return ((((x[findX + 1] - wx) ** 3) * M[findX] + ((wx - x[findX]) ** 3) * M[findX + 1]) / (6 * h[findX])
+            + ((x[findX + 1] - wx) * y[findX] + (wx - x[findX]) * y[findX + 1]) / h[findX]
+            - (((x[findX + 1] - wx) * M[findX]) + ((wx - x[findX])) * M[findX + 1]) * h[findX] / 6)
 
 
-def FullCubicSpline(x, y, wx,Y_0 ,Y_n):
+def FullCubicSpline(x, y, wx, Y_0, Y_n):
+    """
+
+    :param x: Array of x values
+    :param y: Array of y values
+    :param wx: wanted value
+    :return: result
+    """
     if wx in x:
         return y[x.index(wx)]
     h = [x[1] - x[0]]
     g = [1]
     m = [0]
-    d = [(6/h[0])*(((y[1]-y[0])/h[0])-Y_0)]
-    for i in range(1,len(x)):
-        #if i == len(x) - 1:
+    d = [(6 / h[0]) * (((y[1] - y[0]) / h[0]) - Y_0)]
+    for i in range(1, len(x)):
+        # if i == len(x) - 1:
         #   d.append(0)
         if i != len(x) - 1:
             h.append(x[i + 1] - x[i])
@@ -204,45 +242,41 @@ def FullCubicSpline(x, y, wx,Y_0 ,Y_n):
             m.append(1 - g[i])
     m.append(1)
     g.append(0)
-    d.append((6/h[len(x)-2])*(Y_n-(y[len(x)-1]-y[len(x)-2])/h[0]))
+    d.append((6 / h[len(x) - 2]) * (Y_n - (y[len(x) - 1] - y[len(x) - 2]) / h[0]))
     findX = 0
     for i in range(len(x)):
         if wx < x[i]:
-            findX = i-1
+            findX = i - 1
             break
-        if i==len(x)-1:
-            findX=len(x)-2
+        if i == len(x) - 1:
+            findX = len(x) - 2
 
     matrix = makeMatrix(m, g)
-    vec=[]
+    vec = []
     vec.append(d[findX])
-    vec.append(d[findX+1])
-    M = MatrixSolver.matrixSolve(matrix,d)
+    vec.append(d[findX + 1])
+    M = MatrixSolver.matrixSolve(matrix, d)
 
     # print(d[0])
     # print(d[len(d)-1])
-    return ((((x[findX + 1] - wx) ** 3) * M[findX] + ((wx - x[findX]) ** 3) * M[findX+1]) / (6 * h[findX])
-    +((x[findX + 1] - wx) * y[findX] + (wx - x[findX]) * y[findX + 1]) / h[findX]
-    - (((x[findX + 1] - wx) * M[findX]) + ((wx - x[findX])) * M[findX+1]) * h[findX] / 6)
+    return ((((x[findX + 1] - wx) ** 3) * M[findX] + ((wx - x[findX]) ** 3) * M[findX + 1]) / (6 * h[findX])
+            + ((x[findX + 1] - wx) * y[findX] + (wx - x[findX]) * y[findX + 1]) / h[findX]
+            - (((x[findX + 1] - wx) * M[findX]) + ((wx - x[findX])) * M[findX + 1]) * h[findX] / 6)
 
-#print(CubicSpline([0, math.pi / 6, math.pi / 4, math.pi / 2], [0, 0.5, 0.7072, 1], math.pi/3 ))
-#print(FullCubicSpline(, ,math.pi / 3,1,0))
-#print(CubicSpline([-0.5,0,1,2.3,2.6], [7.25,1,2,30.21, 41.04],1.5))
-#print(makeMatrix(m, g))
+
 
 
 
 # TODO Parameters for the interpolation functions, change them by choice!
-xList = [1,2,3,4,5]
-yList = [1,2,1,1.5,1]
+xList = [1, 2, 3, 4, 5]
+yList = [1, 2, 1, 1.5, 1]
 x = 1.5
 # Parameters only for full spline cubic
 ftagzero = 0
 ftagn = 1
 
 
-
-def main(xList ,yList ,x):
+def main(xList, yList, x):
     matrix1 = []
     matrix2 = []
     matrix3 = []
@@ -256,13 +290,14 @@ def main(xList ,yList ,x):
         matrix4.append([xList[i], yList[i]])
         matrix5.append([xList[i], yList[i]])
         matrix6.append([xList[i], yList[i]])
-    print("Linear Method:\n"+str(Linear_Method(matrix1, x))+"\n")
-    print("Polynomial Method:\n"+str(Polynomial_Method(matrix2, x))+"\n")
-    print("Lagrange Method:\n"+str(Lagrange_Method(matrix3, x))+"\n")
-    print("Nevil Method:\n"+str(Nevil_Method(matrix4,x))+"\n")
-    print("Cubic Spline:\n"+str(CubicSpline(xList, yList, x))+"\n")
-    print("Full Cubic Spline:\n"+str(FullCubicSpline(xList, yList, x, ftagzero, ftagn))+"\n")
+
+    print("Linear Method:\n" + str(Linear_Method(matrix1, x)) + "\n")
+    print("Polynomial Method:\n" + str(Polynomial_Method(matrix2, x)) + "\n")
+    print("Lagrange Method:\n" + str(Lagrange_Method(matrix3, x)) + "\n")
+    print("Nevil Method:\n" + str(Nevil_Method(matrix4, x)) + "\n")
+    print("Cubic Spline:\n" + str(CubicSpline(xList, yList, x)) + "\n")
+    print("Full Cubic Spline:\n" + str(FullCubicSpline(xList, yList, x, ftagzero, ftagn)) + "\n")
 
 
 # main
-main(xList, yList,x)
+main(xList, yList, x)
