@@ -68,8 +68,17 @@ def useTrapez(n, upper, lower, h, func, intervals, err=0.000001):
 
 
 def f(x):
-    f = (2*x*((math.e)**(-x))+math.log(2*x**2,math.e))*(2*x**3+2*x**2-3*x-5)
+    f = (math.cos(x**2))**2+7*x+7
     return (f)
+
+
+
+def trapezium(n, a, b, func,  ) -> float:
+    dx = (b - a)/n
+    sum = (func(a) + func(b))/2
+    for i in range(1, n, 1):
+        sum += func(a + i*dx)
+    return sum*dx
 
 
 def main():
@@ -79,8 +88,9 @@ def main():
     z = n / 2  # The number of even functions(z+1 is the number of odd functions)
     ans = 0
     h = (upper - lower) / n
-    #print("Trapez: ", useTrapez(n, upper, lower, h,f ,n))
-    print("Simpson: ", useSimpson(z, upper, lower, h, f))
+    print("Trapez: ", useTrapez(n, upper, lower, h,f ,n))
+    #print("Simpson: ", useSimpson(z, upper, lower, h, f))
+    print(trapezium(n,lower,upper,f))
 
 
 main()
