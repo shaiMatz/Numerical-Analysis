@@ -4,7 +4,7 @@ from math import *
 # Input your upper,lower and interval variables
 
 
-def simpsonsrule(n, upper, lower, h, function):
+def simpsonsrule(n, upper, lower, h, function,stage):
     rule = 0
     x = lower + h  # Calculates for all odd valures
     for i in range(1, int(n + 1)):
@@ -16,6 +16,7 @@ def simpsonsrule(n, upper, lower, h, function):
         rule += 2 * function(x)  # adds all calculations to variable rule
         x += 2 * h
     ans = (h / 3) * (function(lower) + function(upper) + rule)  # This is carrying out the formula
+    print("Formula in stage {4} = ({0} / 3) * ({1} + {2} + {3})".format(h,function(lower),function(upper),rule,stage))
     return (ans)
 
 
@@ -34,15 +35,23 @@ def trapeRule(n, upper, lower, intervals, h, function):
 
 def useSimpson(n, upper, lower, h, func, err=0.000001):
     n = int(n)
+    results=[]
     if n % 2 == 1:
         n += 1
-    res1 = simpsonsrule(n, upper, lower, h, func)
+    stage=1
+    res1 = simpsonsrule(n, upper, lower, h, func,stage)
+    print("Mid result point is " + str(res1)+"\n")
+    stage=2
     n2 = n*2
-    res2 = simpsonsrule(n2, upper, lower, h, func)
+    res2 = simpsonsrule(n2, upper, lower, h, func,stage)
+    print("Mid result point is " + str(res2)+"\n")
     while abs(res2 - res1) >= err:
         n2 *= 2
         res1 = res2
-        res2 = simpsonsrule(n, upper, lower, h, func)
+        stage+=1
+        res2 = simpsonsrule(n, upper, lower, h, func,stage)
+        print("Mid result point is " + str(res2)+"\n")
+    print("\nNumber of parts that were divided " + str(n2))
     return res2
 
 
@@ -59,19 +68,20 @@ def useTrapez(n, upper, lower, h, func, intervals, err=0.000001):
 
 
 def f(x):
-    f = x**2 - cos(2*x + 1)
+    f = (2*x*((math.e)**(-x))+math.log(2*x**2,math.e))*(2*x**3+2*x**2-3*x-5)
     return (f)
 
 
 def main():
-    upper = 3.5
-    lower = 1
+    upper = 1
+    lower = 0.5
     n = 4
     z = n / 2  # The number of even functions(z+1 is the number of odd functions)
     ans = 0
     h = (upper - lower) / n
-    print("Trapez: ", useTrapez(n, upper, lower, h,f ,n))
+    #print("Trapez: ", useTrapez(n, upper, lower, h,f ,n))
     print("Simpson: ", useSimpson(z, upper, lower, h, f))
 
 
 main()
+

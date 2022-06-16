@@ -117,12 +117,15 @@ def Lagrange_Method(tab, xf):
     :param xf: wanted value
     :return: result
     """
+    print("Lagrange - way to the result:\nsum=0")
     Sum, temp = 0, 1
     for i in range(len(tab)):
         for j in range(len(tab)):
             if i != j:
                 temp *= (xf - tab[j][0]) / ((tab[i][0]) - tab[j][0])
+                print(("temp=({0} - {1})/({2}-{1})").format(xf ,tab[j][0],tab[i][0]))
         Sum += temp * tab[i][1]
+        print(("Sum = {0} * {1} = {2}").format(temp,tab[i][1],Sum))
         temp = 1
     return Sum
 
@@ -213,6 +216,14 @@ def CubicSpline(x, y, wx):
     vec.append(d[findX])
     vec.append(d[findX + 1])
     M = MatrixSolver.matrixSolve(matrix, d)
+    print("cubic funcion:")
+    print("h: "+str(h))
+    print("g: " + str(g))
+    print("d: " + str(d))
+    print("m "+str(m))
+    print("M: " + str(M))
+    print(((("s{0} = (x[{0}] - SearchX) ** 3) * M[{1}] + ((SearchX - x[{1}]) ** 3) * M[{0}]) / (6 * h[{1}]) + ((x[{0}] - SearchX) * y[{1}] + (SearchX - x[{1}]) * y[{0}]) / h[{1}]- (((x[{0}] - SearchX) * M[{1}]) + ((SearchX - x[{1}])) * M[{0}]) * h[{1}] / 6)").format(findX+1,findX))))
+    print()
     return ((((x[findX + 1] - wx) ** 3) * M[findX] + ((wx - x[findX]) ** 3) * M[findX + 1]) / (6 * h[findX])
             + ((x[findX + 1] - wx) * y[findX] + (wx - x[findX]) * y[findX + 1]) / h[findX]
             - (((x[findX + 1] - wx) * M[findX]) + ((wx - x[findX])) * M[findX + 1]) * h[findX] / 6)
@@ -268,9 +279,9 @@ def FullCubicSpline(x, y, wx, Y_0, Y_n):
 
 
 # TODO Parameters for the interpolation functions, change them by choice!
-xList = [1, 2, 3, 4, 5]
-yList = [1, 2, 1, 1.5, 1]
-x = 1.5
+xList = [5.5,6.8,7.2,8.3]
+yList = [3.14,4.35,2.74,5.70]
+x = 7
 # Parameters only for full spline cubic
 ftagzero = 0
 ftagn = 1
@@ -291,12 +302,13 @@ def main(xList, yList, x):
         matrix5.append([xList[i], yList[i]])
         matrix6.append([xList[i], yList[i]])
 
-    print("Linear Method:\n" + str(Linear_Method(matrix1, x)) + "\n")
-    print("Polynomial Method:\n" + str(Polynomial_Method(matrix2, x)) + "\n")
-    print("Lagrange Method:\n" + str(Lagrange_Method(matrix3, x)) + "\n")
-    print("Nevil Method:\n" + str(Nevil_Method(matrix4, x)) + "\n")
+    #print("Linear Method:\n" + str(Linear_Method(matrix1, x)) + "\n")
+    #print("Polynomial Method:\n" + str(Polynomial_Method(matrix2, x)) + "\n")
+    print("Lagrange Method result:\n" + str(Lagrange_Method(matrix3, x)) + "\n")
     print("Cubic Spline:\n" + str(CubicSpline(xList, yList, x)) + "\n")
-    print("Full Cubic Spline:\n" + str(FullCubicSpline(xList, yList, x, ftagzero, ftagn)) + "\n")
+    #print("Nevil Method:\n" + str(Nevil_Method(matrix4, x)) + "\n")
+
+    #print("Full Cubic Spline:\n" + str(FullCubicSpline(xList, yList, x, ftagzero, ftagn)) + "\n")
 
 
 # main
