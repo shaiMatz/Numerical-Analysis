@@ -27,10 +27,12 @@ Algorithms
 - Lagrange interpolation polynomial
 - Polynomial interpolation application
 - Cubic spline
-- nevilles method
+- Nevilles method
 - Lagrange_Method
 
+### Integrals Approximation
 
-
+- Trapezoidal rule
+- Simpson’s rule
 
 
